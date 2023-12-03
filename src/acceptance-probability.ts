@@ -1,6 +1,6 @@
 /** Toutes les fonctions de calcul du taux d'acceptation d'un nouvel état. Chaque fonction retourne une valeur compris entre 0 et 1. */
 export abstract class AcceptanceProbability {
-	public static linear(currentCost: number, lastAcceptedCost: number, temperature: number): number {
+	public static linear(currentEnergy: number, lastAcceptedEnergy: number, temperature: number): number {
 		return temperature;
 	}
 
@@ -8,7 +8,7 @@ export abstract class AcceptanceProbability {
 		return Math.random();
 	}
 
-	public static exp(currentCost: number, lastAcceptedCost: number, temperature: number): number {
+	public static exp(currentEnergy: number, lastAcceptedEnergy: number, temperature: number): number {
 		const isTemperatureInvalid = isNaN(temperature) || temperature === 0;
 
 		// Si la température n'est pas valide, on n'accepte jamais la solution.
@@ -18,7 +18,7 @@ export abstract class AcceptanceProbability {
 	}
 
 	/** ! N'utiliser cette fonction que pour des tests. La solution va s'enfermer dans un minimum local ! */
-	public static ifBetter(currentCost: number, lastAcceptedCost: number, temperature: number): number {
-		return currentCost < lastAcceptedCost ? 1 : 0;
+	public static ifBetter(currentEnergy: number, lastAcceptedEnergy: number, temperature: number): number {
+		return currentEnergy < lastAcceptedEnergy ? 1 : 0;
 	}
 }

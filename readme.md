@@ -16,16 +16,15 @@ npm install simulated-annealing-ts
 
 ## Usage
 
-Ouvrir `main.ts`, appeler la méthode run de `SimulatedAnnealing` avec les paramètres appropriés.
+Create a `main.ts` file, call the `run` method of `SimulatedAnnealing` with the appropriate parameters.
 
-Ci-dessous un exemple de configuration où l'on cherche à minimiser la somme entre 2 valeurs voisines d'un tableau.
-La fonction de coût `getCost` retourne `15` pour `[1,9,2]`. Les versions minimales sont: `[1,2,9]` et `[9,2,1]` qui ont un coût de `8`.
+Here's a configuration example where we aim to minimize the sum between two neighboring values in an array. The energy function `getEnergy` returns `15` for `[1,9,2]`. The minimal versions are: `[1,2,9]` and `[9,2,1]` with a energy of `8`.
 
 ```typescript
-import { SimulatedAnnealing } from "./modules/simulated-annealing/simulated-annealing";
+import { SimulatedAnnealing } from "simulated-annealing-ts";
 
 const getEnergy = (etat: Array<number>): number => {
-	// Exemple de fonction de coût: La différence absolue entre les éléments voisins du tableau.
+	// Example energy function: The absolute difference between neighboring elements in the array.
 	return etat.reduce((previous: number, current: number, index: number): number => {
 		if (index === 0) return previous;
 
@@ -33,43 +32,52 @@ const getEnergy = (etat: Array<number>): number => {
 	}, 0);
 };
 
-const getNeighbor = (etat: Array<number>): Array<number> => {
-	// Intervertis 2 éléments du tableau.
-	return etat.swap(Math.randomInt(0, etat.length - 1), Math.randomInt(0, etat.length - 1));
+const randomInt = function (min: number, max: number): number {
+	return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-SimulatedAnnealing.run<Array<number>>([1, 9, 2], getEnergy, getNeighbor);
+/** Swap 2 random elements in the array. */
+const swap2Elements = (etat: Array<number>): Array<number> => {
+	const index1 = randomInt(0, etat.length - 1);
+	const index2 = randomInt(0, etat.length - 1);
+
+	const newArray = [...etat];
+	const tmp = newArray[index1];
+	newArray[index1] = newArray[index2];
+	newArray[index2] = tmp;
+
+	return newArray;
+};
+
+const initialState: Array<number> = [1, 9, 2];
+const result = SimulatedAnnealing.run<Array<number>>(initialState, getEnergy, swap2Elements);
+
+console.log("Best solution found (", getEnergy(result), "):", result);
 ```
 
-### Paramètres
+### Parameters
 
-1. Valeur initiale.
-2. Fonction de calcul de l'énergie. En dehors du recuit, cette méthode est appelée fonction objective. En prend un état et retourne son énergie/son coût.
-3. Fonction de mutation de l'état. Prend en paramètre un état et retourne un nouvel état.
-4. Il est possible de paramétrer le nombre maximal d'itérations, la valeur extremum de l'énergie, la fonction de calcul de la température, la fonction de calcul de la probabilité d'accepter une valeur. Il est aussi possible de **maximiser** plutôt que minimiser l'énergie. Aucun paramètre de la configuration n'est obligatoire.
+1. `initialValue`.
+2. `getEnergy`: Outside of simulated annealing, this method is called the objective function. Takes a state and returns its energy/cost.
+3. `smallMutation`: Takes a state as a parameter and returns a new state.
+4. `config`: Il est possible de paramétrer le nombre maximal d'itérations, la valeur extremum de l'énergie, la fonction de calcul de la température, la fonction de calcul de la probabilité d'accepter une valeur. Il est aussi possible de **maximiser** plutôt que minimiser l'énergie. Aucun paramètre de la configuration n'est obligatoire.
    Exemple:
 
 ```typescript
-SimulatedAnnealing.run<Array<number>>(initialState, getCost, getNeighbor, {
+const result = SimulatedAnnealing.run<Array<number>>(initialState, getEnergy, swap2Elements, {
 	maxSteps: 100,
 	getTemperature: Temperature.linear,
 	getAcceptanceProbability: AcceptanceProbability.exp,
-	energyDirection: EnergyDirection.maximize,
+	energyDirection: EnergyDirection.minimize,
 	energyLimit: 8,
 });
 ```
 
-Il n'est pas nécessaire de manipuler un tableau de nombres. Il est possible de manipuler nimporte **quel type de données**.
+You don't have to manipulate an array of numbers. It's possible to manipulate **any data type**.
 
-Différents algorithmes de calcul de l'énergie et de l'acceptation d'un nouvel état sont implémentés. Il est possible de créer son propre algorithme.
+Various algorithms for energy calculation and accepting a new state are implemented. You can create your own algorithm.
 
 ```typescript
 	getTemperature: (currentStep: number, maxSteps: number): number => currentStep / maxSteps,
-	getAcceptanceProbability: (currentCost: number, lastAcceptedCost: number, temperature: number): number => temperature,
-```
-
-## 3. Exécuter
-
-```
-npm run run
+	getAcceptanceProbability: (currentEnergy: number, lastAcceptedEnergy: number, temperature: number): number => temperature,
 ```

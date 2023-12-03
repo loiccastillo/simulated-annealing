@@ -1,6 +1,6 @@
 import { AcceptanceProbability, EnergyDirection, SimulatedAnnealing, Temperature } from ".";
 
-const getCost = (etat: Array<number>): number => {
+const getEnergy = (etat: Array<number>): number => {
 	// Fonction de coût: La différence absolue entre les éléments voisins du tableau.
 	return etat.reduce((previous: number, current: number, index: number): number => {
 		if (index === 0) return previous;
@@ -19,7 +19,7 @@ const getNeighbor = (etat: Array<number>): Array<number> => {
 };
 
 const initialState: Array<number> = [1, 9, 8, 5, 2, 3, 7, 6, 1, 9];
-SimulatedAnnealing.run<Array<number>>(initialState, getCost, getNeighbor, {
+SimulatedAnnealing.run<Array<number>>(initialState, getEnergy, getNeighbor, {
 	maxSteps: 100,
 	getTemperature: Temperature.linear,
 	getAcceptanceProbability: AcceptanceProbability.exp,
@@ -27,4 +27,4 @@ SimulatedAnnealing.run<Array<number>>(initialState, getCost, getNeighbor, {
 	energyLimit: 8,
 });
 
-console.log("Coût minimum :", getCost(initialState.sort()));
+console.log("Coût minimum :", getEnergy(initialState.sort()));
