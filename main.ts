@@ -1,4 +1,4 @@
-import { AcceptanceProbability, EnergyDirection, SimulatedAnnealing, Temperature } from "./simulated-annealing";
+import { AcceptanceProbability, EnergyDirection, SimulatedAnnealing, Temperature } from ".";
 
 const getCost = (etat: Array<number>): number => {
 	// Fonction de coût: La différence absolue entre les éléments voisins du tableau.
