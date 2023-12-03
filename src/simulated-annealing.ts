@@ -4,7 +4,7 @@ import "./math-extension";
 import { Temperature } from "./temperature";
 import { Direction, EnergyDirection } from "./energy-direction";
 
-type acceptance = (currentCost: number, bestCost: number, temperature: number) => number;
+type acceptance = (currentEnergy: number, bestEnergy: number, temperature: number) => number;
 
 /** Configuration utilisateur pour réaliser  */
 export interface SimulatedAnnealingConfig {
@@ -23,8 +23,8 @@ export abstract class SimulatedAnnealing {
 
 	public static run<T>(
 		initialState: T,
-		/** Fonction objectif. Calcul l'énergie d'un état. */
-		getCost: (state: T) => number,
+		/** Objective function. Calculates the energy of a state. */
+		getEnergy: (state: T) => number,
 		smallMutation: (state: T) => T,
 		userConfig?: SimulatedAnnealingConfig
 	): T {
@@ -32,15 +32,15 @@ export abstract class SimulatedAnnealing {
 
 		let state = initialState;
 		let bestState = initialState;
-		let energy = getCost(initialState);
-		let bestEnergy = getCost(bestState);
+		let energy = getEnergy(initialState);
+		let bestEnergy = getEnergy(bestState);
 		let step = 0;
 
-		if (config.enableLog) console.log("Starting with initial state (", getCost(initialState), ") :", initialState);
+		if (config.enableLog) console.log("Starting with initial state (", getEnergy(initialState), ") :", initialState);
 
 		while (!this.hasToStop(step, config.maxSteps, energy, config.energyLimit, config.energyDirection)) {
 			const stateX: T = smallMutation(state);
-			const energyX: number = getCost(stateX);
+			const energyX: number = getEnergy(stateX);
 			const temperature = config.getTemperature(step, config.maxSteps);
 			const accepted = this.isAccepted(energyX, energy, temperature, config.getAcceptanceProbability, config.energyDirection);
 
@@ -60,7 +60,7 @@ export abstract class SimulatedAnnealing {
 			step++;
 		}
 
-		if (config.enableLog) console.log("Ending with best cost:", getCost(bestState), ", best solution:", bestState);
+		if (config.enableLog) console.log("Ending with best energy:", getEnergy(bestState), ", best solution:", bestState);
 
 		return bestState;
 	}
