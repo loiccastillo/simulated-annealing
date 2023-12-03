@@ -13,6 +13,7 @@ export interface SimulatedAnnealingConfig {
 	energyDirection?: Direction;
 	getTemperature?: (currentStep: number, maxSteps: number) => number;
 	getAcceptanceProbability?: acceptance;
+	enableLog?: boolean;
 }
 
 interface FilledConfig extends Required<SimulatedAnnealingConfig> {}
@@ -35,14 +36,16 @@ export abstract class SimulatedAnnealing {
 		let bestEnergy = getCost(bestState);
 		let step = 0;
 
-		console.log("Starting with initial state (", getCost(initialState), ") :", initialState);
+		if (config.enableLog) console.log("Starting with initial state (", getCost(initialState), ") :", initialState);
 
 		while (!this.hasToStop(step, config.maxSteps, energy, config.energyLimit, config.energyDirection)) {
 			const stateX: T = smallMutation(state);
 			const energyX: number = getCost(stateX);
 			const temperature = config.getTemperature(step, config.maxSteps);
 			const accepted = this.isAccepted(energyX, energy, temperature, config.getAcceptanceProbability, config.energyDirection);
-			console.log(`Itération ${step + 1}: ${accepted}. Coût: ${energyX}, température: ${temperature}, solution: ${stateX}`);
+
+			if (config.enableLog)
+				console.log(`Itération ${step + 1}: ${accepted}. Coût: ${energyX}, température: ${temperature}, solution: ${stateX}`);
 
 			if (accepted) {
 				state = stateX;
@@ -57,7 +60,7 @@ export abstract class SimulatedAnnealing {
 			step++;
 		}
 
-		console.log("Ending with best cost:", getCost(bestState), ", best solution:", bestState);
+		if (config.enableLog) console.log("Ending with best cost:", getCost(bestState), ", best solution:", bestState);
 	}
 
 	private static hasToStop(
@@ -84,7 +87,6 @@ export abstract class SimulatedAnnealing {
 		if (direction.isStrictlyBetter(newEnergy, oldEnergy)) return true;
 
 		const acceptanceProbability = acceptanceFct(newEnergy, oldEnergy, temperature);
-		console.log(`prob: ${(acceptanceProbability * 100).toFixed(4)}%`);
 
 		return Math.random() < acceptanceProbability;
 	}
@@ -99,6 +101,7 @@ export abstract class SimulatedAnnealing {
 			energyLimit: userConfig.energyLimit ?? configDirection.defaultExtremeValue(),
 			getTemperature: userConfig.getTemperature ?? Temperature.linear,
 			getAcceptanceProbability: userConfig.getAcceptanceProbability ?? AcceptanceProbability.exp,
+			enableLog: userConfig.enableLog ?? false,
 		};
 
 		return newConfig;
