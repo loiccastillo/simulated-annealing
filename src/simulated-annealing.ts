@@ -27,7 +27,7 @@ export abstract class SimulatedAnnealing {
 		getCost: (state: T) => number,
 		smallMutation: (state: T) => T,
 		userConfig?: SimulatedAnnealingConfig
-	): void {
+	): T {
 		const config = this.fillConfigDefaultValues(userConfig);
 
 		let state = initialState;
@@ -61,6 +61,8 @@ export abstract class SimulatedAnnealing {
 		}
 
 		if (config.enableLog) console.log("Ending with best cost:", getCost(bestState), ", best solution:", bestState);
+
+		return bestState;
 	}
 
 	private static hasToStop(
