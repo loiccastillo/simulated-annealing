@@ -1,6 +1,7 @@
-import { beforeEach, describe, expect, it, test } from "@jest/globals";
+import { beforeEach, describe, expect, it } from "@jest/globals";
 import { EnergyDirection } from "./energy-direction";
-import { AcceptanceProbability, SimulatedAnnealing } from "./simulated-annealing";
+import { SimulatedAnnealing } from "./simulated-annealing";
+import { AcceptanceProbability } from "./acceptance-probability";
 
 describe("Simulated SimulatedAnnealingling", () => {
 	beforeEach(() => {});
