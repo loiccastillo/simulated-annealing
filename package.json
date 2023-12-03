@@ -2,7 +2,7 @@
 	"name": "simulated-annealing-ts",
 	"version": "1.0.0",
 	"license": "MIT",
-	"main": "simulated-annealing.js",
+	"main": "index.js",
 	"scripts": {
 		"build": "tsc main.ts",
 		"build-watch": "tsc main.ts -w",
