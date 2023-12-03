@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"prettier.useTabs": true,
+		"editor.formatOnSave": true,
+		"prettier.printWidth": 140
+	},
+}

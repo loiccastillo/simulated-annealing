@@ -1,0 +1,25 @@
+{
+	"name": "simulated-annealing-ts",
+	"version": "1.0.0",
+	"license": "MIT",
+	"main": "simulated-annealing.js",
+	"scripts": {
+		"build": "tsc main.ts",
+		"build-watch": "tsc main.ts -w",
+		"run": "node main.js",
+		"test": "jest"
+	},
+	"author": "Loïc CASTILLO",
+	"description": "Simulated Annealing in TypeScript",
+	"devDependencies": {
+		"@jest/globals": "^29.7.0",
+		"jest": "^29.7.0",
+		"ts-jest": "^29.1.1"
+	},
+	"keywords": [
+		"optimization",
+		"simulated",
+		"annealing",
+		"simulated-annealing"
+	]
+}

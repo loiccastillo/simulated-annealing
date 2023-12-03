@@ -1,0 +1,7 @@
+# Ignore JavaScript files
+src/**/*.js
+simulated-annealing.js
+main.js
+
+# Ignore Node.js related files and directories
+node_modules/
