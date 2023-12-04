@@ -2,6 +2,7 @@
 src/**/*.js
 simulated-annealing.js
 main.js
+index.js
 
 # Ignore Node.js related files and directories
 node_modules/
