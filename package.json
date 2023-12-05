@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"license": "MIT",
 	"main": "index.js",
+	"homepage": "https://github.com/loiccastillo/simulated-annealing",
 	"scripts": {
 		"build": "tsc main.ts",
 		"build-watch": "tsc main.ts -w",
