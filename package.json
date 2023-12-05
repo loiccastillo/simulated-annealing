@@ -1,6 +1,6 @@
 {
 	"name": "simulated-annealing-ts",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"license": "MIT",
 	"main": "index.js",
 	"homepage": "https://github.com/loiccastillo/simulated-annealing",
